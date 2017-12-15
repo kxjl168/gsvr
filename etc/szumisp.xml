@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!-- 基本配置 -->
+	<ConfigItem>
+		<ConfigName>CompanyName</ConfigName>
+		<ConfigValue>深圳中兴网信</ConfigValue>
+		<ConfigDesc>公司名称</ConfigDesc>
+	</ConfigItem>
+
+	<ConfigItem>
+		<ConfigName>PRENUM</ConfigName>
+		<ConfigValue>3</ConfigValue>
+		<ConfigDesc>手机路由器比例</ConfigDesc>
+	</ConfigItem>
+	
+	<ConfigItem>
+		<ConfigName>ROUTE_SK_PORT</ConfigName>
+		<ConfigValue>18000</ConfigValue>
+		<ConfigDesc>服务端路由器socket监听端口</ConfigDesc>
+	</ConfigItem>
+	
+	<ConfigItem>
+		<ConfigName>ROUTE_TIME_OUT_MIN</ConfigName>
+		<ConfigValue>2</ConfigValue>
+		<ConfigDesc>路由器连接中转服务器超时时间（分钟）</ConfigDesc>
+	</ConfigItem>
+	
+	<ConfigItem>
+		<ConfigName>ENABLE_ADJUST_PLAN</ConfigName>
+		<ConfigValue>false</ConfigValue>
+		<ConfigDesc>是否启用动态调整路由计划数</ConfigDesc>
+	</ConfigItem>
+	
+	<ConfigItem>
+		<ConfigName>ENABLE_CHECK_TIMEOUT</ConfigName>
+		<ConfigValue>false</ConfigValue>
+		<ConfigDesc>是否启用检查路由分配超时</ConfigDesc>
+	</ConfigItem>
+	
+	<ConfigItem>
+		<ConfigName>ENABLE_CHECK_FREE</ConfigName>
+		<ConfigValue>false</ConfigValue>
+		<ConfigDesc>是否启用检查空闲路由器</ConfigDesc>
+	</ConfigItem>
+			
+	
+	
+</Config>
