@@ -171,6 +171,7 @@ function init() {
 		{
 			if(item!=null)
 				{
+				$scope.edit="编辑";
 				$scope.s_account=item.accountid;
 				$scope.s_pass=item.pass;
 				$scope.s_city=item.city;
@@ -183,7 +184,7 @@ function init() {
 				}
 			else
 				{
-				
+				$scope.edit="新增";
 				$("#s_account").removeAttr('disabled');
 				
 				$scope.s_account="";
@@ -352,10 +353,12 @@ function init() {
 		$scope.title = "手机账号管理";
 		//$scope.curpage=1;
 		$scope.page = 1;
-		$scope.rows = 5;
+		$scope.rows = 10;
 
 		$scope.rows_select = [5, 10, 20];
-
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
 		$scope.pageData = [];
 
 
@@ -386,7 +389,7 @@ function init() {
 
 			var obj = new Object();
 			obj.city = $scope.city;// "12345678";
-			obj.deviceid = $scope.id;// "12345678";
+			obj.id = $scope.id;// "12345678";
 			obj.ip = $scope.ip;
 			obj.compy_name = $scope.compy_name;
 

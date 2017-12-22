@@ -83,12 +83,13 @@ left join proxyserver_info pi on tt2.proxyserver_id=pi.id
 ) ttt1 
 left join proxyserver_route pr on ttt1.proxyserver_id=pr.proxyserver_id and ttt1.city=pr.city
    ]]>
-<if test='city != null and city != "" '>
+
+	where ttt1.city is not null
+		 <if test='city != null and city != "" '>
 			and ttt1.city = #{city}
 		</if>
-		 <![CDATA[
  order by ttt1.phone_num-ttt1.online_route_num desc
-  ]]>
+
 	</select>
 	
  
@@ -122,7 +123,11 @@ left join proxyserver_route pr on ttt1.proxyserver_id=pr.proxyserver_id and ttt1
 	select * from proxyserver_route where proxyserver_id=#{proxyserver_id} and city=#{city}
  	    </select>
  
+ 	<select id="getProxyserverGroupInfo" resultType="com.zteict.web.routeM.model.ProxyserverRoute">
+	select proxyserver_id,sum(phone_num) phone_num from proxyserver_route group by proxyserver_id
 	
+ 	    </select>
+ 	
 </mapper>
   
 

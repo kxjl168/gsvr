@@ -80,6 +80,9 @@ public class ProxyserverRouteController extends BaseController {
 			ProxyserverRoute query = new ProxyserverRoute();
 			query.setProxyserver_ip(ip);
 			query.setCity(city);
+			
+			query.setPage(curPage);
+			query.setPageCount(pageCount);
 
 			query.setProxyserver_id(proxyserverid);
 		

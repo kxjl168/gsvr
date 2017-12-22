@@ -111,7 +111,7 @@
 
 
 											<div class=" col-md-6  col-xs-12  ">
-												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">用户ID：</div>
+												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">账号ID：</div>
 												<div class="col-md-6 col-xs-8 text-right ">
 													<input type="text" class="form-control" id="deviceid" ng-model="id" placeholder="">
 
@@ -128,7 +128,7 @@
 										</div>
 										<div class="row  form-group margin-bottom-5">
 											<div class=" col-md-6  col-xs-12 ">
-												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3 ">位置：</div>
+												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3 ">出口位置：</div>
 												<div class="col-md-6 col-xs-8 text-right ">
 													<input type="text" class="form-control" id="city" ng-model="city" placeholder="">
 
@@ -321,7 +321,7 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title" id="myModalLabel">新增子账号</h4>
+							<h4 class="modal-title" id="myModalLabel">{{edit}}子账号</h4>
 						</div>
 
 

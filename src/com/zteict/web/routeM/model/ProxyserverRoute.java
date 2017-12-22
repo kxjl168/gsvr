@@ -22,9 +22,9 @@ public class ProxyserverRoute extends BaseModel {
 	
 	 private String proxyserver_id ;//` varchar(128) NOT NULL COMMENT '服务器id',
 	 private String city ;//` varchar(64) DEFAULT NULL COMMENT '出口城市',
-	 private Integer online_route_num ;//` int(11) DEFAULT '0' COMMENT '在线路由数',   从路由器表中查询
-	 private Integer plan_route_num ;//` int(11) DEFAULT '0' COMMENT '计划路由数',   根据需要连接的手机数量动态计算
-	 private Integer phone_num;//连接到该中转服务器上，需要指定出口位置的手机数量
+	 private Integer online_route_num=0 ;//` int(11) DEFAULT '0' COMMENT '在线路由数',   从路由器表中查询
+	 private Integer plan_route_num=0 ;//` int(11) DEFAULT '0' COMMENT '计划路由数',   根据需要连接的手机数量动态计算
+	 private Integer phone_num=0;//连接到该中转服务器上，需要指定出口位置的手机数量
 	 
 	 //query
 	 

@@ -88,5 +88,14 @@ public interface ProxyserverRouteDao {
 	 */
 	public int getProxyserverRoutePageListCount(ProxyserverRoute query);
 	
+	/**
+	 * 按proxyserver, sum(phonenum) 查询 各个中转服务器上的手机数
+	 * 
+	 * @param map
+	 * @return
+	 * @author zj
+	 * @date 2017-12-19
+	 */
+	public List<ProxyserverRoute> getProxyserverGroupInfo();
 	
 }

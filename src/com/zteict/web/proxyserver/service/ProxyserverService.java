@@ -64,6 +64,6 @@ public interface ProxyserverService {
 	 * @return
 	 * @date 2016-8-4
 	 */
-	public Proxyserver getProxyserverInfoById(@Param(value="id")String id);
+	public Proxyserver getProxyserverInfoById(Proxyserver Proxyserver);
 	
 }

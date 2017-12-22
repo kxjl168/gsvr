@@ -64,34 +64,7 @@ public class MenuInfoController extends BaseController {
 			return;
 		}
 
-		List<MenuInfo> rst = new ArrayList<MenuInfo>();
-
-		// List<MenuInfo> menus = menuService.queryRootMenus();
-
-		List<Role> roles = privilegeService.getManagerRoleList(user);
-
-		boolean isroot = false;
-		// 过滤权限
-		if (roles != null) {
-
-			for (int i = 0; i < roles.size(); i++) {
-				if (roles.get(i).getRole_en().equals("root")) {
-
-					isroot = true;
-					break;
-				}
-			}
-		}
-
-		if (isroot) {
-			rst =menuService. queryAllMenus();
-		} else {
-			Role r = new Role();
-			r.setRole_en(user.getUtype().toString());// 用户类型与角色一样
-			rst = privilegeService.getRoleMenusList(r);
-		}
-
-		user.setMenus(rst);
+		List<MenuInfo> rst = menuService.updateUserMenus(user);
 
 		Gson gs = new Gson();
 		String jsStr = gs.toJson(rst);

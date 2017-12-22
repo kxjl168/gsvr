@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zteict.web.proxyserver.model.Proxyserver;
 
+
 public interface ProxyserverDao {
 
 	
@@ -62,5 +63,21 @@ public interface ProxyserverDao {
 	 * @return
 	 * @date 2016-8-4
 	 */
-	public Proxyserver getProxyserverInfoById(@Param(value="id")String id);
+	public Proxyserver getProxyserverInfoById(Proxyserver Proxyserver);
+	
+	/**
+	 * 更新Proxyserver
+	 * 
+	 * @param Proxyserver
+	 * @return
+	 */
+	public int updateProxyserver(Proxyserver Proxyserver) ;
+	
+	/**
+	 * 添加Proxyserver
+	 * @param Proxyserver
+	 * @return
+	 */
+	public int addProxyserver(Proxyserver Proxyserver);
+	
 }

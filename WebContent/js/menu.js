@@ -146,7 +146,7 @@ function initmenu(ul, curmenu) {
 										
 									
 										
-										if (curmenu == menus[j].menuUrl)
+										if( (curmenu == menus[j].menuUrl )||(curmenu+"/" == menus[j].menuUrl))
 											{
 											html += "<li class=\"active\"><a href=\"#\">"
 												+ menus[j].menuName + "</a></li>";

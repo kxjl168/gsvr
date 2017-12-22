@@ -18,6 +18,81 @@ function error(data) {
 	});
 }
 
+
+function cancelBubble(e) { 
+    var evt = e ? e : window.event; 
+        if (evt.stopPropagation) {        //W3C 
+            evt.stopPropagation(); 
+        }else {       //IE      
+       evt.cancelBubble = true; 
+       }  
+}
+
+function setTimeFormat(id,min,max) {
+	var datetype = $("#dateType").val();
+
+	var startDate = '%yyyy-%MM-%dd %HH';
+	var dateFmt = 'yyyy-MM-dd HH';
+	
+	// startDate = '%HH:%mm';
+	// dateFmt = 'HH:mm';
+	
+	datetype="DAY";
+
+	if (datetype == "HOUR") {
+		startDate = '%yyyy-%MM-%dd %HH';
+		dateFmt = 'yyyy-MM-dd HH';
+	} else if (datetype == "DAY") {
+		startDate = '%yyyy-%MM-%dd';
+		dateFmt = 'yyyy-MM-dd';
+	} else if (datetype == "MONTH") {
+		startDate = '%yyyy-%MM';
+		dateFmt = 'yyyy-MM';
+	}else if(datetype == "TIME")
+		{
+		 startDate = '%HH:%mm:%ss';
+		 dateFmt = 'HH:mm:ss';
+		}
+		
+	var param={
+		startDate : startDate,
+		dateFmt : dateFmt,
+		el:id
+	};
+	if(min!=null)
+		param.minDate='#F{$dp.$D(\''+min+'\')}';
+	if(max!=null)
+		param.maxDate='#F{$dp.$D(\''+max+'\')}';
+	
+
+		WdatePicker(param);	
+
+}
+
+
+function getNowFormatDate() {
+    var curDate = new Date(); 
+    
+     
+   //var date=new Date( curDate.getTime() + 24*60*60*1000);
+    var date=new Date( curDate.getTime() );
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+            //+ " " + date.getHours() + seperator2 + date.getMinutes()
+            //+ seperator2 + date.getSeconds();
+    return currentdate;
+} 
+
+
 function getImUrl() {
 	var http =basePath+"/";// "${pageContext.request.contextPath}";
 	

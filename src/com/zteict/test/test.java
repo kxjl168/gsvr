@@ -17,14 +17,41 @@ public class test {
 	
 	public static void main(String args[])
 	{
-		testLogin();
+		//testLogin();
 		
 		//testLoginOut();
 		
 		//testRegister();
 		
 		
+		update();
+	}
+	
+	private static void update()
+	{
 		
+		String url = "http://127.0.0.1:8080/gserver/version/getVersionInfo.action?type=2";
+		
+		//String url = "http://10.204.37.192:8080/gserver/version/getVersionInfo.action?type=2";
+
+
+		String data = "";
+
+		String responsedata = "";
+		try {
+			responsedata = sendHttpData(url, data);
+
+			System.out.println("返回:" + responsedata);
+		//	System.out.println("解密:" + out);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		System.out.println(responsedata);
+		// ***********vmInstallApp*****************
+
 	}
 	
 	private static void testLoginOut() {

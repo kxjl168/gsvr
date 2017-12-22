@@ -8,7 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
-	<title>概览</title>
+	<title>{{title}}</title>
 	<link rel="stylesheet" type="text/css" media="screen" href="../../js/plugin/bootstrap/css/bootstrap.min.css">
 
 	<link rel="stylesheet" href="../../css/kCommon.css">
@@ -34,7 +34,7 @@
 					<span class="glyphicon glyphicon-th-list  "></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">公司账号管理</a>
+				<a class="navbar-brand" href="#">{{title}}</a>
 			</div>
 			<div class="collapse navbar-collapse  pull-right-k" id="menuItem">
 				<ul class="hide nav navbar-nav ">
@@ -257,7 +257,7 @@
 								</li> -->
 							</ul>
 							
-							<select onchange="changerows(this)" class="pull-right">
+							<select onchange="changerows(this)" class="pull-right pages">
 	<option ng-repeat="x in rows_select"  >{{x}}</option>
 </select>
 					</div>

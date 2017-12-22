@@ -354,7 +354,9 @@ $("#cpType2").select2({
 		$scope.rows=10;
 		
 		$scope.rows_select=[5,10,20];
-		
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
 		$scope.pageData=[];
 		
 	

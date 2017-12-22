@@ -322,6 +322,8 @@ public class RouteSocketClient extends HttpServlet {
 			route.setFree(RouteFreeStaus.Free.toString());
 			routeService.updateOrSaveDevice(route);
 			clientList.put(channel, route);
+			
+			//TODO 是否需要返回数据
 			return;
 		}
 

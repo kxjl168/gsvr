@@ -100,10 +100,12 @@ $("#cpType2").select2({
 		$scope.title="流量日志";
 		//$scope.curpage=1;
 		$scope.page=1;
-		$scope.rows=5;
+		$scope.rows=10;
 		
 		$scope.rows_select=[5,10,20];
-		
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
 		$scope.pageData=[];
 		
 	

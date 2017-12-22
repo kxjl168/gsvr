@@ -17,7 +17,7 @@ public class SysUserBean extends BaseModel {
 	
 	public enum UserType{
 		
-		Admin("admin"),Company("company");
+		Root("root"),Admin("admin"),Company("company");
 		
 		
 		private String val="";

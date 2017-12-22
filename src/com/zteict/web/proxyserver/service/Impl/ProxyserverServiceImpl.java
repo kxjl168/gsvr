@@ -45,8 +45,8 @@ public class ProxyserverServiceImpl implements ProxyserverService {
 	}
 
 	@Override
-	public Proxyserver getProxyserverInfoById(@Param("id") String id) {
-		return bannerDao.getProxyserverInfoById(id);
+	public Proxyserver getProxyserverInfoById(Proxyserver Proxyserver) {
+		return bannerDao.getProxyserverInfoById(Proxyserver);
 	}
 
 }

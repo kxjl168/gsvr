@@ -97,6 +97,9 @@ public class CompanyController extends BaseController {
 		JsonUtil.responseOutWithJson(response, rst);
 	}
 	
+	
+	
+	
 	/**
 	 * 页面-获取company列表
 	 * 

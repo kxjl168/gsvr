@@ -10,6 +10,7 @@
 			<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
 			<title>概览</title>
 			<link rel="stylesheet" type="text/css" media="screen" href="../../js/plugin/bootstrap/css/bootstrap.min.css">
+				<link rel="stylesheet" type="text/css" media="screen" href="../../js/plugin/angular-xeditable-0.8.1/css/xeditable.min.css">
 
 			<link rel="stylesheet" href="../../css/kCommon.css">
 
@@ -110,7 +111,7 @@
 
 
 											<div class=" col-md-6  col-xs-12  ">
-												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">用户ID：</div>
+												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">账号ID：</div>
 												<div class="col-md-6 col-xs-8 text-right ">
 													<input type="text" class="form-control" id="deviceid" ng-model="id" placeholder="">
 
@@ -129,7 +130,7 @@
 										</div>
 										<div class="row  form-group margin-bottom-5">
 											<div class=" col-md-6  col-xs-12 ">
-												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">位置：</div>
+												<div class="control-label padding-top-0 col-xs-4 col-md-3 col-lg-3">出口位置：</div>
 												<div class="col-md-6 col-xs-8 text-right ">
 													<input type="text" class="form-control" id="city" ng-model="city" placeholder="">
 
@@ -189,7 +190,13 @@
 										<td>{{ x.accountid }}</td>
 										<td>{{ x.ip }}</td>
 										<td>{{ x.ip_refresh_interval }}</td>
-										<td>{{ x.city }}</td>
+										<td>
+										<div class="popover-wrapper">
+										 <a href="#"  editable-select="x.city" onbeforesave="checkcity($index,$data)"  e-ng-options="s as s for s in citys_select"> <!--  s.value as s.text for -->
+   {{ x.city|| "empty" }}
+  </a></div>
+										
+										</td>
 										<td>{{ x.company_name }}</td>
 										<td>
 											<a href="#" class="text-info" ng-click="addOrModify(x)">修改</a>
@@ -323,14 +330,14 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title" id="myModalLabel">新增子账号</h4>
+							<h4 class="modal-title" id="myModalLabel">{{edit}}子账号</h4>
 						</div>
 
 
 
 						<div class="modal-body container margin-top-10  ">
 				<div class="row " >
-					<form name="fm " class="form-horizontal col-xs-12 col-lg-12 " style="min-width: 150px; ">
+					<form name="fm" id="fm" class="form-horizontal col-xs-12 col-lg-12 " style="min-width: 150px; ">
 				
 
 					<input   type="text " class="hide form-control " name="s_recordid" id="s_recordid" ng-model="s_recordid" placeholder=" ">
@@ -341,12 +348,12 @@
 							<div class="col-xs-7 text-right ">
 							 <input required disabled type="text " class="form-control " name="s_account" id="s_account" ng-model="s_account" placeholder=" ">
 							 </div>
-							 <div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_account.$error.required ">
+							 <div class="col-xs-12 col-xs-offset-4 row ">
+							<!--  <span ng-show="fm.s_account.$error.required ">
 							<span style="color:red " title="用户ID必须填写 ">
-							<span class="glyphicon glyphicon-remove "></span>
+							*用户ID必须填写&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 						</div>
 						
@@ -356,36 +363,36 @@
 							<div class="col-xs-7 text-right ">
 						
 						
-						 <input required type="text " class="form-control "  type="password" name="s_pass" id="s_pass" ng-model="s_pass" placeholder=" ">
+						 <input required type="text" class="form-control"  type="s_pass" name="s_pass" id="s_pass" ng-model="s_pass" placeholder=" ">
 						
 							</div>
-							 <div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_pass.$error.required ">
+							 <div class="col-xs-12 col-xs-offset-4 row ">
+							<!--  <span ng-show="fm.s_pass.$error.required ">
 							<span style="color:red " title="密码必须填写 ">
-							<span class="glyphicon glyphicon-remove "></span>
+							*密码必须填写&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 						</div>
 
 						<div class="form-group col-xs-12 row ">
 								<div class="control-label padding-top-0 col-xs-4 ">出口IP刷新周期：</div>
 								<div class="col-xs-7 text-right ">
-								 <input  type="number " ng-patter="/^\d*$/ "  min="9" max="1000"  class="form-control"  id="name" name= "s_ip_refresh" ng-model="s_ip_refresh " placeholder=" ">
+								 <input  type="number" ng-pattern="/^\d*$/ "  min="1" max="1000"  class="form-control"  id="name" name= "s_ip_refresh" ng-model="s_ip_refresh " placeholder=" ">
 					
 							</div>
-							 <div class="col-xs-1 text-right ">
+							 <div class="col-xs-12 col-xs-offset-4 row ">
 							<!--  <span ng-show="fm.s_ip_refresh.$error.required ">
 							<span style="color:red " title="刷新周期必须填写 ">
 							<span class="glyphicon glyphicon-remove "></span>
 							</span> 
 							 </span> -->
 							 
-							  <span ng-show=" fm.s_ip_refresh.$invalid ">
+							<!--   <span ng-show=" fm.s_ip_refresh.$invalid ">
 							<span style="color:red " title="刷新周期为大于9的数字 ">
-							<span class="glyphicon glyphicon-remove "></span>
+								*刷新周期为1-1000的数字&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 							</div>
 					
@@ -408,17 +415,17 @@
 						<div class="form-group col-xs-12 row ">
 							<div class="control-label padding-top-0 col-xs-4 ">所属公司：</div>
 							<div class="col-xs-7 text-right ">
-								<select class="form-control " required id="s_company" name="s_company" ng-model="s_company">
+								<select class="form-control "  id="s_company" name="s_company" ng-model="s_company">
 									<option  ng-repeat="x in compays_select " value="{{x.accountid}} ">{{x.company_name}}</option>
 								</select>
 							</div>
 							
-							<div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_company.$error.required ">
+							<div class="col-xs-12 col-xs-offset-4 row hide">
+							<!--  <span ng-show="fm.s_company.$error.required ">
 							<span style="color:red " title="公司必选填写 ">
-							<span class="glyphicon glyphicon-remove "></span>
+							*公司必选填写&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 							
 						</div>
@@ -440,11 +447,11 @@
 
 
 
-<div class="modal fade " id="myModal3 " tabindex="-1 " role="dialog " aria-labelledby="myModalLabel " aria-hidden="true ">
+<div class="modal fade " id="myModal3" tabindex="-1 " role="dialog " aria-labelledby="myModalLabel " aria-hidden="true ">
 		<div class="modal-dialog " style="width: 250px; ">
 			<div class="modal-content ">
 				<div class="modal-header ">
-					<button type="button " class="close " data-dismiss="modal " aria-hidden="true ">&times;</button>
+					<button type="button " class="close " data-dismiss="modal" aria-hidden="true ">&times;</button>
 					<h4 class="modal-title " id="myModalLabel ">确认操作</h4>
 				</div>
 
@@ -479,6 +486,7 @@
 			<script type="text/javascript " src="../../js/plugin/angular/angular.min.js "></script>
 			<script type="text/javascript " src="../../js/plugin/angular/angular-resource.min.js "></script>
 
+<script type="text/javascript " src="../../js/plugin/angular-xeditable-0.8.1/js/xeditable.js "></script>
 
 
 
@@ -487,7 +495,12 @@
 			<script type="text/javascript " src="../../js/plugin/jquery/noty.themes.bootstrap.js "></script>
 
 
+			    <script type="text/javascript"
+	src="../../js/plugin/jquery/jquery.validate.js"></script> 
 
+		<script type="text/javascript"
+	src="${basePath}/js/kvalidate.js"></script>
+	
 
 			<script type="text/javascript " src="../../js/plugin/swiper/idangerous.swiper.min.js "></script>
 			<script src="../../js/menu.js "></script>

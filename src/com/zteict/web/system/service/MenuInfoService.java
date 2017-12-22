@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.zteict.web.system.model.MenuInfo;
+import com.zteict.web.system.model.SysUserBean;
 
 
 
@@ -24,6 +25,17 @@ public interface MenuInfoService {
 	public List<MenuInfo> queryRootMenus();
 	
 	public List<MenuInfo> queryAllMenus();
+	
+	
+	/**
+	 * 更新用户菜单信息
+	 * 
+	 * @param map
+	 * @return
+	 * @author zj
+	 * @date 2017-12-20
+	 */
+	public List<MenuInfo> updateUserMenus(SysUserBean user);
 	
 	/**
 	 * 根据父菜单ID查询子菜单

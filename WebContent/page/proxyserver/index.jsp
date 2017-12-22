@@ -34,7 +34,7 @@
 					<span class="glyphicon glyphicon-th-list  "></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">公司账号管理</a>
+				<a class="navbar-brand" href="#">{{title}}</a>
 			</div>
 			<div class="collapse navbar-collapse  pull-right-k" id="menuItem">
 				<ul class="hide nav navbar-nav ">

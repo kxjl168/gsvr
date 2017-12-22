@@ -11,6 +11,8 @@ import com.zteict.tool.config.ConfigReader;
 import com.zteict.web.device.model.Device;
 import com.zteict.web.device.service.Impl.DeviceServiceImpl;
 import com.zteict.web.phoneaccount.dao.PhoneAccountDao;
+import com.zteict.web.proxyserver.dao.ProxyserverDao;
+import com.zteict.web.proxyserver.model.Proxyserver;
 import com.zteict.web.routeM.dao.ProxyserverRouteDao;
 import com.zteict.web.routeM.dao.ServerCompleteRouteDao;
 import com.zteict.web.routeM.model.ProxyserverRoute;
@@ -23,23 +25,27 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 
 	@Autowired
 	ProxyserverRouteDao psvrouteDao;
-	
+
+	@Autowired
+	ProxyserverDao psvrDao;
+
 	@Autowired
 	ServerCompleteRouteDao svrcpltRoutevDao;
 
 	/**
-	 * 查询中转服务器上的路由器分配情况
-	 * 根据   中转服务器计划分配数-当前在线数   缺口大到小排序
+	 * 查询中转服务器上的路由器分配情况 根据 中转服务器计划分配数-当前在线数 缺口大到小排序
+	 * 
 	 * @param query
 	 * @return
 	 * @date 2016-8-4
 	 */
-	public List<ProxyserverRoute> getProxyserverRouteListOrderbyGap(ProxyserverRoute query)
-	{
-		return psvrouteDao.getProxyserverRouteListOrderbyGap( query);
+	public List<ProxyserverRoute> getProxyserverRouteListOrderbyGap(
+			ProxyserverRoute query) {
+		return psvrouteDao.getProxyserverRouteListOrderbyGap(query);
 	}
-	private static Logger logger = Logger.getLogger(ProxyserverRouteServiceImpl.class);
 
+	private static Logger logger = Logger
+			.getLogger(ProxyserverRouteServiceImpl.class);
 
 	/**
 	 * 调整中转服务器预设 路由器大小
@@ -52,6 +58,10 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 	public void adjustPlanRouteNum() {
 
 		try {
+			
+			
+			//TODO 是否要清空原数据，或者每天清空一次。？
+			
 
 			// 手机、路由器预设比例
 			Integer n = ConfigReader.getInstance().getIntProperty("PRENUM", 3);
@@ -59,9 +69,10 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 			// 计算中转服务器上的手机数量
 			// 根据 指定路由器 地市
 			ProxyserverRoute query = new ProxyserverRoute();
-			List<ProxyserverRoute> psvrRoutes = psvrouteDao.getProxyserverRouteListOrderbyGap(query);
+			List<ProxyserverRoute> psvrRoutes = psvrouteDao
+					.getProxyserverRouteListOrderbyGap(query);
 
-			logger.info("ProxyserverRoute size:"+psvrRoutes.size());
+			logger.info("ProxyserverRoute size:" + psvrRoutes.size());
 			for (int i = 0; i < psvrRoutes.size(); i++) {
 
 				try {
@@ -71,7 +82,7 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 					int routeNum = csroute.getPhone_num() / n + 1;
 
 					csroute.setPlan_route_num(routeNum);
-				//  调整中转服务器 路由器分配预设值
+					// 调整中转服务器 路由器分配预设值
 					updateProxyserverRoute(csroute);
 				} catch (Exception e) {
 					continue;
@@ -79,15 +90,12 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 
 			}
 
-			
-
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
 
-	
 	/**
 	 * 更新ProxyserverRoute
 	 * 
@@ -95,11 +103,33 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 	 * @return
 	 */
 	public int updateProxyserverRoute(ProxyserverRoute proxyserverRoute) {
-		ProxyserverRoute d = psvrouteDao.getProxyserverRouteInfo(proxyserverRoute);
+		logger.debug("update updateProxyserverRoute");
+		ProxyserverRoute d = psvrouteDao
+				.getProxyserverRouteInfo(proxyserverRoute);
+		int rst = -1;
 		if (d != null)
-			return psvrouteDao.updateProxyserverRoute(proxyserverRoute);
+			rst = psvrouteDao.updateProxyserverRoute(proxyserverRoute);
 		else
-			return psvrouteDao.addProxyserverRoute(proxyserverRoute);
+			rst = psvrouteDao.addProxyserverRoute(proxyserverRoute);
+
+		// 更新 中转服务器已分配手机数
+		List<ProxyserverRoute> rts = psvrouteDao.getProxyserverGroupInfo();
+		for (int i = 0; i < rts.size(); i++) {
+
+			ProxyserverRoute pr = rts.get(i);
+			Proxyserver psvr = new Proxyserver();
+			psvr.setId(pr.getProxyserver_id());
+			psvr.setAssignphones(String.valueOf(pr.getPhone_num()));
+
+			Proxyserver tppsvr = psvrDao.getProxyserverInfoById(psvr);
+
+			if (tppsvr != null)
+				psvrDao.updateProxyserver(psvr);
+			/*else
+				psvrDao.addProxyserver(psvr);*/
+		}
+
+		return rst;
 	}
 
 	/**
@@ -115,7 +145,6 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 		return svrcpltRoutevDao.getServerCompleteRouteList(query);
 	}
 
- 
 	/*
 	*//**
 	 * 添加ProxyserverRoute
@@ -159,31 +188,28 @@ public class ProxyserverRouteServiceImpl implements ProxyserverRouteService {
 	 * 
 	 * @date 2016-8-4
 	 */
-	
-	
 
 	/**
 	 * 分页获取列表
+	 * 
 	 * @param query
 	 * @return
 	 * @date 2016-8-4
 	 */
-	public List<ProxyserverRoute> getProxyserverRoutePageList(ProxyserverRoute query)
-	{
+	public List<ProxyserverRoute> getProxyserverRoutePageList(
+			ProxyserverRoute query) {
 		return psvrouteDao.getProxyserverRoutePageList(query);
 	}
 
 	/**
 	 * 获取总条数
+	 * 
 	 * @param query
 	 * @return
 	 * @date 2016-8-4
 	 */
-	public int getProxyserverRoutePageListCount(ProxyserverRoute query)
-	{
+	public int getProxyserverRoutePageListCount(ProxyserverRoute query) {
 		return psvrouteDao.getProxyserverRoutePageListCount(query);
 	}
-	
-	
-	
+
 }

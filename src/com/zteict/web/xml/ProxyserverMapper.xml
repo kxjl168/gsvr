@@ -5,6 +5,11 @@
 	
 	</resultMap>
 	
+	<select id="getProxyserverInfoById" parameterType="com.zteict.web.proxyserver.model.Proxyserver" resultType="com.zteict.web.proxyserver.model.Proxyserver">
+		select * from proxyserver_info 
+		where 1=1 and id=#{id}
+		</select>
+	
 	
 	<select id="getProxyserverPageList" parameterType="com.zteict.web.proxyserver.model.Proxyserver" resultMap="ProxyserverMap">
 		select * from proxyserver_info 
@@ -33,7 +38,33 @@
 	</select>
 	
 
+	 <update id="updateProxyserver" parameterType="com.zteict.web.proxyserver.model.Proxyserver">
+		update proxyserver_info 
+		<trim prefix=" set " suffixOverrides=",">
+		<if test='ip != null'>
+			ip=#{ip},
+		</if>
+		<if test='port != null'>
+			port=#{port},
+		</if>
+		<if test='maxphones != null'>
+			maxphones=#{maxphones},
+		</if>
+		<if test='assignphones != null'>
+			assignphones=#{assignphones},
+		</if>
+		 </trim>
+		
+		where id=#{id} 
+	</update>
 	
+ <insert id="addProxyserver" parameterType="com.zteict.web.proxyserver.model.Proxyserver">
+	    
+
+		insert into proxyserver_info 
+		(id,ip,port,maxphones,assignphones)
+		values(#{id},#{ip},#{port},#{maxphones},#{assignphones})
+	</insert>
 	
 </mapper>
   

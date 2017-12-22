@@ -74,10 +74,13 @@ function checkLogin() {
 			dataType : "json",
 			success : function(data) {
 				if (data.sucess) {
-					if(data.type=="company")
+					
+					window.location.href = basePath;
+					
+					/*if(data.type=="company")
 					window.location.href = basePath + "/page/pccountM/";
 					else
-						window.location.href = basePath + "/page/company/";
+						window.location.href = basePath + "/page/company/";*/
 				} else {
 					error( data.msg);//, "info");
 				}

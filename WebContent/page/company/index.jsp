@@ -164,7 +164,7 @@
 										<tr>
 										<th>公司名称</th>
 											<th>公司账号</th>
-											<th>IP段</th>
+											<th  class="hide">IP段</th>
 											<th>出口IP刷新周期</th>
 											<th>描述</th>
 											<th>操作</th>
@@ -177,12 +177,15 @@
 										<tr ng-repeat="x in datalist">
 											 <td>{{ x.company_name }}</td>
 											 <td>{{ x.accountid }}</td>
-											 <td>{{ x.ip_desc }}</td>
+											 <td  class="hide">{{ x.ip_desc }}</td>
 											 <td>{{ x.ip_refresh_interval }}</td>
 											 <td>{{ x.desc_info }}</td>
 											 
-											 	<td><a href="#" class="text-info" ng-click="addOrModify(x)">修改</a>
+											 	<td><a href="#"  class="text-info" ng-click="addOrModify(x)">修改</a>
+											 	<a href="#"  class="text-info" ng-click="editproxysvr($event,x)">分配中转服务器IP段</a>
+								
 								<a href="#" class="text-warning" ng-click="del(x)">删除</a>
+								
 								
 								</td>
 										</tr>
@@ -252,82 +255,31 @@
 
 
 
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	
+
+
+
+	<div class="modal fade" data-backdrop="static" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabel">条件选择</h4>
-				</div>
-
-
-
-				<div class="modal-body">
-					<div class="row" ng-show="selType==1">
-						<div class="form-group col-xs-12">
-							<div class="control-label col-xs-4">选择位置</div>
-							<div class="col-xs-8 text-right">
-								<select class="form-control" onchange="" ng-model="cpTypes" id="cpType" name="cpType">
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="row" ng-show="selType==2">
-						<div class="form-group col-xs-12">
-							<div class="control-label col-xs-4">是否公开</div>
-							<div class="col-xs-8 text-center">
-								<div class="info_value">
-									<input type="radio" value="1" onclick="selectPublic(1)" name="IsPublic" ng-model="cp.IsPublic" ng-checked="cp.IsPublic=='1'">是
-									<input type="radio" value="0" onclick="selectPublic(0)" name="IsPublic" ng-model="cp.IsPublic" ng-checked="cp.IsPublic=='0'">否
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- <div class="row" ng-show="selType==3">
-                    <div class="form-group col-xs-12">
-                        <div class="control-label col-xs-4">部门</div>
-                        <div class="col-xs-8 text-center">
-                            <div class="info_value">
-                                <div id="menuContent" class="menuContent">
-                                    <ul id="depTree" class="ztree" style="margin-top:0; width:160px;"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-warning" data-dismiss="modal">取消
-					</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal"> 确定 </button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
-	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabel">新增公司账号</h4>
+					<h4 class="modal-title" id="myModalLabel">{{edit}}公司账号</h4>
 				</div>
 
 
 
 				<div class="modal-body container margin-top-10 " >
 				<div class="row " >
-					<form name="fm" class="form-horizontal col-xs-12 col-lg-12 " style="min-width: 150px; ">
+					<form name="fm" id="fm" class="form-horizontal col-xs-12 col-lg-12 " style="min-width: 150px; ">
 				
 
 					
-						<input  type="text " class="hide form-control " name="s_recordid" id="s_recordid " ng-model="s_recordid" placeholder=" ">
+						<input  type="text " class="hide form-control " name="s_recordid" id="s_recordid" ng-model="s_recordid" placeholder=" ">
 					
 					
 					<div class="form-group col-xs-12 row ">
-							<div class="control-label padding-top-0 col-xs-4 ">用户ID：</div>
+							<div class="control-label padding-top-0 col-xs-4 ">公司账号ID：</div>
 							<div class="col-xs-7 text-right ">
 							 <input required type="text" class="form-control" id="s_account" name="s_account" ng-model="s_account" placeholder="">
 							 
@@ -335,12 +287,12 @@
 
 							</div>
 							
-							<div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_account.$error.required">
+							<div class="col-xs-12 col-xs-offset-4 row ">
+							<!--  <span ng-show="fm.s_account.$error.required">
 							<span style="color:red" title="用户ID必须填写">
-							<span class="glyphicon glyphicon-remove"></span>
+							*用户ID必须填写&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 						</div>
 						
@@ -350,17 +302,17 @@
 							<div class="col-xs-7 text-right ">
 						
 						
-						 <input required type="text" class="form-control"  type="password " id="s_pass" name="s_pass" ng-model="s_pass" placeholder="">
+						 <input required type="text" class="form-control"  type="password" id="s_pass" name="s_pass" ng-model="s_pass" placeholder="">
 							 
 						
 							</div>
 							
-							 <div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_pass.$error.required">
+							 <div class="col-xs-12 col-xs-offset-4 row ">
+							<!--  <span ng-show="fm.s_pass.$error.required">
 							<span style="color:red" title="密码必须填写">
-							<span class="glyphicon glyphicon-remove"></span>
+							*密码必须填写&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 						</div>
 						
@@ -368,7 +320,7 @@
 						<div class="form-group col-xs-12 row ">
 							<div class="control-label padding-top-0 col-xs-4 ">公司名称：</div>
 							<div class="col-xs-7 text-right ">
-								 <input type="text" class="form-control"  id="name" ng-model="s_company" placeholder="">
+								 <input type="text" required class="form-control"  id="s_company" name="s_company" ng-model="s_company" placeholder="">
 						
 
 							</div>
@@ -383,34 +335,26 @@
 							</div>
 						</div>
 						
-						<div class="form-group col-xs-12 row ">
-							<div class="control-label padding-top-0 col-xs-4 ">IP段：</div>
-							<div class="col-xs-7 text-right ">
-								 <textarea type="text" class="form-control"  id="name" ng-model="s_ip_desc" placeholder="">
-								 </textarea>
 						
-
-							</div>
-						</div>
 						
 						<div class="form-group col-xs-12 row ">
 							<div class="control-label padding-top-0 col-xs-4 ">出口IP刷新周期：</div>
 							<div class="col-xs-7 text-right ">
-								 <input required type="number" ng-patter="/^\d*$/"  min="9" max="1000"  class="form-control"  id="name" name= "s_ip_refresh" ng-model="s_ip_refresh" placeholder="">
+								 <input required type="number" ng-pattern="/^\d*$/"  min="1" max="1000"  class="form-control"  id="s_ip_refresh" name= "s_ip_refresh" ng-model="s_ip_refresh" placeholder="">(分钟)
 					
 							</div>
-							 <div class="col-xs-1 text-right ">
-							 <span ng-show="fm.s_ip_refresh.$error.required">
+							 <div class="col-xs-12 col-xs-offset-4 row  ">
+							<!--  <span ng-show="fm.s_ip_refresh.$error.required">
 							<span style="color:red" title="刷新周期必须填写">
-							<span class="glyphicon glyphicon-remove"></span>
+							*刷新周期必须填写&nbsp;
 							</span> 
 							 </span>
 							 
 							  <span ng-show=" fm.s_ip_refresh.$invalid">
-							<span style="color:red" title="刷新周期为大于9的数字">
-							<span class="glyphicon glyphicon-remove"></span>
+							<span style="color:red" title="刷新周期为1-1000的数字">
+							*刷新周期为1-1000的数字&nbsp;
 							</span> 
-							 </span>
+							 </span> -->
 							</div>
 						</div>
 
@@ -431,7 +375,7 @@
 
 
 
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal3" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width: 250px;">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -456,6 +400,159 @@
 			</div>
 		</div>
 	</div>
+	
+	
+	
+	<div  class="dtable  collapse   "  >
+		<div class="panel " style="margin-bottom: 0px;">
+							 <div  class=" collapseOne2 panel-collapse collapse ">
+							<div class="panel-body" style="padding: 0px;">
+								<table class="table table-responsive table-bordered" style="width:95%;margin-left: 10px;">
+									<caption  title="隐藏中转服务器分配信息"  href=".collapseOne2 " data-toggle="collapse"   >
+										 <div class="row">
+										 <div class="col-xs-5 control-label">{{c}}已分配中转服务器及IP段</div>
+										 <span id="titlepic"  data-parent="#accordion2"   style="color:#999;text-align: center;" class="control-label col-xs-2 glyphicon glyphicon-chevron-up  "></span>
+										<div class=" col-lg-2 col-md-2 col-xs-4  margin-bottom-10 pull-right ">
+											<button type="button"  onclick="addOrModifyProserver()"  class="btn btn-primary btn-block   ">新增服务器IP分配</button>
+										</div>
+										<div class="hide col-lg-2 col-md-2 col-xs-4 pull-right margin-bottom-10 padding-right-0 ">
+											<button type="button" ng-click="getList()" class="btn btn-primary btn-block   ">查询</button>
+										</div>
+										 </div>
+										 	
+									</caption>
+									
+									<thead>
+										<tr>
+										<th>服务器ID</th>
+											<th>服务器IP</th>
+											<th>服务器端口</th>
+											<th class="hide">最大可分配手机数</th>
+											<th  class="hide">已分配手机数</th>
+											<th>IP段</th>
+											<th>操作</th> 
+										</tr>
+										
+									</thead>
+									<tbody>
+									
+					
+										<tr ng-repeat="x in compayProxys">
+										
+										<td class="recordid hide" >{{ x.recordid }}</td>
+									    
+											 <td ng-show="x.rowspan" rowspan="{{x.rowspan}}"  class="id" >{{ x.id }}</td>
+											 <td ng-show="x.rowspan" rowspan="{{x.rowspan}}"  class="ip">{{ x.ip }}</td>
+											 <td ng-show="x.rowspan" rowspan="{{x.rowspan}}" >{{ x.port }}</td>
+											 <td ng-show="x.rowspan" rowspan="{{x.rowspan}}"  class="hide">{{ x.maxphones }}</td>
+											 <td ng-show="x.rowspan" rowspan="{{x.rowspan}}"  class="hide" >{{ x.assignphones }}</td>
+											  <td class="desc">{{ x.ipdesc }}</td>
+											 
+										<td>
+										<a href="#" class="text-info"  onclick="addOrModifyProserver(this)">编辑IP段</a>
+								<a href="#" class="text-warning" onclick="delpro(this)">取消分配</a>
+								
+								</td>
+										</tr>
+									
+									
+									</tbody>
+									
+									
+								
+								</table>
+								</div>
+								</div>
+							</div>
+							</div>
+						
+	
+	
+	
+	<div class="modal fade" id="myModal1"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">{{edit}}中转服务器及IP段分配</h4>
+				</div>
+
+
+
+				<div class="modal-body   container margin-top-10 " >
+					<div class="row " >
+					<form name="fmp" id="fmp" class="form-horizontal  col-xs-12" style="min-width: 150px; ">
+				
+
+					<input  type="text " class="hide form-control " name="p_record_id" id="p_record_id " ng-model="p_record_id" placeholder=" ">
+						<input  type="text " class="hide form-control " name="p_company_id" id="p_company_id " ng-model="p_company_id" placeholder=" ">
+					
+					
+						<div class="form-group row ">
+							<div class="control-label padding-top-0 col-xs-3 ">中转服务器：</div>
+							<div class="col-xs-6 text-right ">
+								<select class="form-control "  id="p_proxyserver_id" name="p_proxyserver_id" ng-model="p_proxyserver_id">
+									<option  ng-repeat="x in proxyservers " value="{{x.id}}">{{x.id}}-{{x.ip}}:{{x.port}}</option>
+								</select>
+							
+
+							</div>
+							<div class="col-xs-12 col-xs-offset-3 row hide">
+							 <!-- <span ng-show="fmp.p_proxyserver_id.$error.required">
+							<span style="color:red" title="">
+							*中转服务器必须填写
+							</span> 
+							 </span> -->
+							 </div>
+							
+						</div>
+						
+						<div class="form-group  row ">
+							<div class="control-label padding-top-0 col-xs-3 ">IP段：</div>
+							<div class="col-xs-6 text-right ">
+								 <textarea required type="text"  
+								  ng-pattern="/^\d+.\d+.\d+.\d+-\d+.\d+.\d+.\d+$/"  
+								   class="form-control"  id="p_ip_desc"
+								   name="p_ip_desc"
+								    ng-model="p_ip_desc" placeholder="">
+								 </textarea>
+							</div>
+							<div class="col-xs-12 col-xs-offset-3 row ">
+							<!--  <span ng-show="fmp.p_ip_desc.$error.required">
+							<span style="color:red" title="IP段必须填写">
+							*IP段必须填写&nbsp;
+							</span> 
+							 </span>
+							 <span ng-show="fmp.p_ip_desc.$invalid">
+							<span style="color:red" title="">
+							*IP段格式为:192.168.1.1-192.168.1.20&nbsp;
+							</span> 
+							 </span> -->
+							</div>
+						</div>
+						
+						
+						
+					</form>
+					
+					
+						
+						
+					</div>
+					
+					
+					
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button " class="btn btn-default btn-warning " data-dismiss="modal">取消
+					</button>
+					                 <button type="button " class="btn btn-primary " ng-click="updateCompanyPro()" > 确定 </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 
 </script>
@@ -495,6 +592,11 @@
 	
 		<script src="../../js/menu.js "></script>
 	
+			    <script type="text/javascript"
+	src="../../js/plugin/jquery/jquery.validate.js"></script> 
+
+		<script type="text/javascript"
+	src="${basePath}/js/kvalidate.js"></script>
 	
 
 	<script type="text/javascript "

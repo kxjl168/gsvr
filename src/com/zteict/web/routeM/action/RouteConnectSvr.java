@@ -166,7 +166,8 @@ public class RouteConnectSvr extends HttpServlet {
 							// 记录socket与路由器关系
 							Device routeInfo = new Device();
 							routeInfo.setIp(channel.getRemoteAddress()
-									.toString()); // 路由器外网IP
+									.toString().substring(1,channel.getRemoteAddress()
+									.toString().indexOf(":"))); // 路由器外网IP
 							// 地市转化
 							String city = "";// TODO
 							routeInfo.setCity(city);

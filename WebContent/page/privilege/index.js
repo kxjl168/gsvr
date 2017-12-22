@@ -166,8 +166,12 @@ function init() {
 
 		$scope.title = "角色管理";
 		$scope.page = 1;
-		$scope.rows = 5;
+		$scope.rows = 10;
 		$scope.rows_select = [5, 10, 20];
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
+		  
 		$scope.pageData = [];
 		
 		$scope.cpTypes = [{

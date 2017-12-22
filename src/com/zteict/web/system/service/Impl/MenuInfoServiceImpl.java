@@ -1,11 +1,16 @@
 package com.zteict.web.system.service.Impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zteict.web.privilege.dao.ManagerRoleDao;
+import com.zteict.web.privilege.dao.RoleDao;
+import com.zteict.web.privilege.model.Role;
 import com.zteict.web.system.dao.MenuInfoDao;
 import com.zteict.web.system.model.MenuInfo;
+import com.zteict.web.system.model.SysUserBean;
 import com.zteict.web.system.service.MenuInfoService;
 
 /**
@@ -20,6 +25,12 @@ public class MenuInfoServiceImpl implements MenuInfoService {
 	@Autowired
 	private MenuInfoDao menuDao;
 
+	@Autowired
+	RoleDao roleDao;
+	@Autowired
+	ManagerRoleDao managerRoleDao;
+
+	
 	@Override
 	public List<MenuInfo> queryRootMenus() {
 		// TODO Auto-generated method stub
@@ -30,6 +41,48 @@ public class MenuInfoServiceImpl implements MenuInfoService {
 
 		return menuDao.queryAllMenus();
 	}
+	
+	
+	/**
+	 * 更新用户菜单信息
+	 * 
+	 * @param map
+	 * @return
+	 * @author zj
+	 * @date 2017-12-20
+	 */
+	public List<MenuInfo> updateUserMenus(SysUserBean user) {
+		List<MenuInfo> rst = new ArrayList<MenuInfo>();
+
+		// List<MenuInfo> menus = menuService.queryRootMenus();
+
+		List<Role> roles = managerRoleDao.getManagerRoleList(user);
+
+		boolean isroot = false;
+		// 过滤权限
+		if (roles != null) {
+
+			for (int i = 0; i < roles.size(); i++) {
+				if (roles.get(i).getRole_en().equals("root")) {
+
+					isroot = true;
+					break;
+				}
+			}
+		}
+
+		if (isroot) {
+			rst = queryAllMenus();
+		} else {
+			Role r = new Role();
+			r.setRole_en(user.getUtype().toString());// 用户类型与角色一样
+			rst = roleDao.getRoleMenusList(r);
+		}
+
+		user.setMenus(rst);
+		return rst;
+	}
+	
 
 	@Override
 	public List<MenuInfo> queryMenusByParent(String parentId) {

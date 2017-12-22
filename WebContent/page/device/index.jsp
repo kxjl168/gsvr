@@ -259,9 +259,7 @@
 
 
 				<select onchange="changerows(this)" class="pull-right">
-					<option ng-repeat="x in rows_select">
-						{{x}}
-					</option>
+					<option ng-repeat="x in rows_select">{{x}}</option>
 				</select>
 			</div>
 

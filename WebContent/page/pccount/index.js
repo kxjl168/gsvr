@@ -1,5 +1,8 @@
 var devMode = 1, dataUrl = "http://10.10.4.2:8280/huimin/";
-var app = angular.module('myApp', ["ngResource"]);
+var app = angular.module('myApp', ["ngResource","xeditable"]);
+app.run(['editableOptions', function(editableOptions) {
+	  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+	}]);
 app.controller('eduCtrl', function ($scope, eduSrv) {
 
 });
@@ -18,7 +21,45 @@ $(function () {
 
 	init();
 	
-
+	var $scope = angular.element(ngSection).scope();
+	kvalidate.init(
+			$("#fm"),
+			{
+				s_account: {
+					required: true,
+				//	version4: true,
+					//minlength:4,
+				},
+				//s_company:"required",
+				s_pass:{
+					required: true,
+				},
+				s_ip_refresh:{
+					//required: true,
+					digits:true,
+					min:1,
+					max:1000,
+				}
+			},
+			{
+				s_account: {
+					required: "用户ID必须填写",
+				//	version4: "版本号格式错误*.*.*.*",
+					//minlength:"至少4个字符"
+				},
+				//s_company:"请输入公司名称",
+				s_pass:
+					{required: "请输入密码",},
+			s_ip_refresh:{
+					//required: "请输入IP刷新时间",
+					digits:"请输入数字",
+					min:"最小为1",
+					max:"最大为1000",
+				}
+			},
+			$scope.doupdate,
+			""
+		);
 
 });
 
@@ -62,6 +103,20 @@ function init() {
 	$scope.$apply(function () {
 
 
+		$scope.checkcity=function(index,data)
+		{
+			//alert(index+"/"+data);
+			//alert($scope.datalist[index].city);
+			
+			var obj={};
+			obj.recordid=$scope.datalist[index].recordid;
+		
+			obj.city= data;// $("#s_city").val();  //$scope.s_city;
+			$scope.doupdate(this,obj);
+			
+		}
+		
+		
 		$scope.cpTypes = [{
 			"id": 0,
 			"text": "江苏"
@@ -169,8 +224,10 @@ function init() {
 		
 		$scope.addOrModify=function(item)
 		{
+			kvalidate.resetForm("#fm");
 			if(item!=null)
 				{
+				$scope.edit="编辑";
 				$scope.s_account=item.accountid;
 				$scope.s_pass=item.pass;
 				$scope.s_city=item.city;
@@ -183,7 +240,7 @@ function init() {
 				}
 			else
 				{
-				
+				$scope.edit="新增";
 				$("#s_account").removeAttr('disabled');
 				
 				$scope.s_account="";
@@ -203,47 +260,26 @@ function init() {
 		}
 		var http = getImUrl();// "";
 
-		$scope.update=function()
-		{
-			
-			if($scope.fm.s_account.$error.required)
-				{
-				error("用户ID必须要填写");
-				return;
-				}
-			if($scope.fm.s_pass.$error.required)
-			{
-				error("密码必须要填写");
-			return;
-			}
-			
-			if($scope.fm.s_company.$error.required)
-			{
-				error("公司必须要填写");
-			return;
-			}
-//			if($scope.fm.s_ip_refresh.$error.required)
-//			{
-//				error("刷新时间必须要填写");
-//			return;
-//			}
-			
-			if($scope.fm.s_ip_refresh.$invalid)
-			{
-				error("刷新时间为数字");
-			return;
-			}
-			
+		
+		$scope.doupdate=function(fm,value){
 			
 			var obj={};
 			
+			if(typeof(value)=="undefined")
+			{
 			obj.recordid=$scope.s_recordid;
 			obj.accountid=$scope.s_account;
 			obj.pass=$scope.s_pass;
 			obj.company_userid= $("#s_company").val();   //$scope.s_company;
-			obj.city= $scope.s_city;// $("#s_city").val();  //$scope.s_city;
-
+			obj.city=  $("#s_city").val();  //$scope.s_city;
 			obj.ip_refresh_interval=$scope.s_ip_refresh;
+			}
+			else
+				{
+				obj=value;
+				}
+
+		
 			
 			SZUMWS(http + "phoneaccount/addOrUpdate.action", JSON
 					.stringify(obj), function succsess(json) {
@@ -267,7 +303,7 @@ function init() {
 					$scope.s_ip_refresh="";
 					
 					$scope.$apply();
-					},1000);
+					},10);
 
 				} else {
 					msg(message);
@@ -290,6 +326,37 @@ function init() {
 			);
 			
 			
+		}
+		
+		$scope.update=function()
+		{
+			
+			/*if($scope.fm.s_account.$error.required)
+				{
+				error("用户ID必须要填写");
+				return;
+				}
+			if($scope.fm.s_pass.$error.required)
+			{
+				error("密码必须要填写");
+			return;
+			}
+			
+			if($scope.fm.s_company.$error.required)
+			{
+				error("公司必须要填写");
+			return;
+			}
+
+			if($scope.fm.s_ip_refresh.$invalid)
+			{
+				error("刷新时间为数字");
+			return;
+			}*/
+			
+			kvalidate.validate("#fm");
+			
+		
 		}
 
 
@@ -320,7 +387,15 @@ function init() {
 
 						$scope.compays_select = eval(json.datalist);
 
-						//$scope.total = json.total;
+						 setTimeout(function(){
+								
+							  // $('#p_proxyserver_id').find("option:selected").attr("selected", false);
+							   $('#s_company').get(0).selectedIndex=1;
+							   // alert($("#p_proxyserver_id").val());
+							    $scope.s_company=$("#s_company").val();
+							  // $scope.apply();
+						   }, 30);
+						
 
 						$scope.$apply();
 
@@ -352,10 +427,12 @@ function init() {
 		$scope.title = "手机账号管理";
 		//$scope.curpage=1;
 		$scope.page = 1;
-		$scope.rows = 5;
+		$scope.rows = 10;
 
 		$scope.rows_select = [5, 10, 20];
-
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
 		$scope.pageData = [];
 
 
@@ -386,7 +463,7 @@ function init() {
 
 			var obj = new Object();
 			obj.city = $scope.city;// "12345678";
-			obj.deviceid = $scope.id;// "12345678";
+			obj.id = $scope.id;// "12345678";
 			obj.ip = $scope.ip;
 			obj.compy_name = $scope.compy_name;
 

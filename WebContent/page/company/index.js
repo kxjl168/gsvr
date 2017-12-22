@@ -17,6 +17,71 @@ $(function() {
 	}*/
 	
 	init();
+	
+	
+	var $scope = angular.element(ngSection).scope();
+	kvalidate.init(
+			$("#fm"),
+			{
+				s_account: {
+					required: true,
+				//	version4: true,
+					//minlength:4,
+				},
+				s_company:"required",
+				s_pass:{
+					required: true,
+				},
+				s_ip_refresh:{
+					required: true,
+					digits:true,
+					min:1,
+					max:1000,
+				}
+			},
+			{
+				s_account: {
+					required: "请输入公司账号ID",
+				//	version4: "版本号格式错误*.*.*.*",
+					//minlength:"至少4个字符"
+				},
+				s_company:"请输入公司名称",
+				s_pass:
+					{required: "请输入公司账号密码",},
+			s_ip_refresh:{
+					required: "请输入IP刷新时间",
+					digits:"请输入数字",
+					min:"最小为1",
+					max:"最大为1000",
+				}
+			},
+			$scope.doupdate,
+			""
+		);
+	
+	kvalidate.init(
+			$("#fmp"),
+			{
+				p_ip_desc: {
+					required: true,
+					ipdesc:true,
+				//	version4: true,
+					//minlength:4,
+				},
+				
+			},
+			{
+				p_ip_desc: {
+					required: "请输入IP段",
+					ipdesc: "IP段格式错误,格式示例:192.168.1.1-192.168.1.20",
+					//minlength:"至少4个字符"
+				},
+				
+			},
+			$scope.doupdateCompanyPro,
+			"","col-xs-offset-3"
+		);
+
 
 });
 
@@ -32,6 +97,56 @@ function changerows(option)
 			$scope.rows=num;
 			$scope.getList();
 		});
+}
+
+
+function delpro(dom)
+{
+	 var $scope = angular.element(ngSection).scope();
+	$scope.$apply(function() {
+		if(typeof(dom)!="undefined")
+			{
+			var item={
+			
+					recordid:$(dom).parent().parent().children(".recordid").html(),
+					p_company_id:$scope.c,
+					p_proxyserver_id:$(dom).parent().parent().children(".id").html(),
+					p_ip_desc:$(dom).parent().parent().children(".desc").html()
+			};
+			
+			$scope.delpro(item);
+			}
+	});
+}
+
+function addOrModifyProserver(dom)
+{
+	//alert($(dom).parent().parent().html());
+	
+	
+	
+	//return;
+	
+	 var $scope = angular.element(ngSection).scope();
+		$scope.$apply(function() {
+			if(typeof(dom)!="undefined")
+				{
+				var item={
+						recordid:$(dom).parent().parent().children(".recordid").html(),
+						p_company_id:$scope.c,
+						p_proxyserver_id:$(dom).parent().parent().children(".id").html(),
+						p_ip_desc:$(dom).parent().parent().children(".desc").html()
+				};
+				
+				$scope.addOrModifyProserver(item);
+				}
+			
+			else
+				$scope.addOrModifyProserver();
+			
+		});
+		
+		cancelBubble();
 }
 
 
@@ -169,10 +284,215 @@ $("#cpType2").select2({
 		
 		}
 		
-		$scope.addOrModify=function(item)
+		
+		$scope.delpro=function(item)
 		{
+			if(item==null)
+				return;
+			
+			var id= item.recordid;
+			
+			
+			
+		$("#myModal3").modal("show");
+		$("#btnconfirm").one("click",function ()
+		{
+
+			var obj={};
+			
+			obj.recordid=item.recordid;
+			obj.companyid=$scope.c;
+			obj.proxyserver_id=item.p_proxyserver_id;
+			
+				SZUMWS(http + "companyproxyserver/del.action", JSON
+						.stringify(obj), function succsess(json) {
+
+					var code = json.ResponseCode;
+					var message = json.ResponseMsg;
+					console.log('-----return -code= ' + code + ';message= '
+							+ message);
+					if (code == 200) {
+			
+						msg("删除成功！");
+						
+						$("#myModal3").modal("hide");
+						
+						$scope.editproxysvr($scope.event,$scope.item);
+						
+						setTimeout(function(){
+							$scope.p_company_id="";
+							$scope.p_proxyserver_id="";
+							$scope.p_ip_desc="";
+							
+							$scope.$apply();
+						},200);
+					
+
+					} else {
+						msg(message);
+					}
+
+				
+					
+				
+
+				}, function error(data) {
+					msg("网络异常!");
+					//$("#myModal2").modal('hide');
+					
+					
+
+				}, false, false
+
+				);
+				
+				//$("#btnconfirm").unbind("click",delfun(id));
+				
+				
+		});
+		
+		}
+		
+		
+		$('.collapseOne2').on('hidden.bs.collapse', function () {
+			$("#tpr").collapse('hide');
+		});
+		
+		
+		$scope.addOrModifyProserver=function(item)
+		{
+			
+			kvalidate.resetForm("#fmp");
 			if(item!=null)
 				{
+				
+				$scope.edit="编辑";
+				
+				
+				$scope.p_record_id=item.recordid;
+				$scope.p_company_id=item.p_company_id;
+				$scope.p_proxyserver_id=item.p_proxyserver_id;
+			
+				$scope.p_ip_desc=item.p_ip_desc;
+			
+				
+				$("#p_company_id").attr('disabled','');
+				$("#p_proxyserver_id").attr('disabled','');
+			
+				
+			
+				   setTimeout(function(){
+					   //$("#s_type option:first").prop("selected", 'selected');
+					   $("#p_proxyserver_id").val($scope.p_proxyserver_id);
+					
+					  // $scope.apply();
+				   }, 500);
+				
+				}
+			else
+				{
+				$scope.edit="新增";
+				$scope.p_record_id="";
+				
+				$scope.p_company_id=$scope.c;//item.companyid;
+				$scope.p_proxyserver_id="";//item.proxyserver_id;
+			
+				$scope.p_ip_desc="";//item.ipdesc;
+			
+				$("#p_company_id").removeAttr('disabled');
+				$("#p_proxyserver_id").removeAttr('disabled');
+			
+			
+				   setTimeout(function(){
+					
+					  // $('#p_proxyserver_id').find("option:selected").attr("selected", false);
+					   $('#p_proxyserver_id').get(0).selectedIndex=1;
+					   // alert($("#p_proxyserver_id").val());
+					    $scope.p_proxyserver_id=$("#p_proxyserver_id").val();
+					  // $scope.apply();
+				   }, 500);
+		
+				}
+			
+			
+			//$scope.getcompayList();
+			$("#myModal1").modal('show');
+		}
+		
+		//打开中转服务器子表格
+		$scope.editproxysvr=function(event,item)
+		{
+			
+			var obj={};
+			obj.companyid=item.accountid;
+		//	$("#myModal1").modal('show');
+			obj.page =1;// 1;// "12345678";
+			obj.rows = 10;// 10;// "12345678";
+			SZUMWS(http + "companyproxyserver/getInfoList.action", JSON
+					.stringify(obj), function succsess(json) {
+
+				var code = json.ResponseCode;
+				var message = json.ResponseMsg;
+				console.log('-----return -code= ' + code + ';message= '
+						+ message);
+				if (code == 200) {
+
+			
+					$scope.compayProxys =eval(json.datalist);
+					$scope.c=item.accountid;
+					
+					$scope.item=item;
+					$scope.event=event;
+					
+					
+						$scope.$apply();
+						
+						
+						
+						 var row=	$("#tpr");
+							if(row.length <=0 )
+							{ 
+							row= $("<tr id='tpr' class='cllospse in' style='background-color: #e5e5e5;'></tr>");
+							}
+							var col=$("<td colspan='6'></td>");
+							row.html(col);
+							col.html($(".dtable").html());
+							
+							($(event.target).parent().parent()).after(row);
+							$("#tpr .dtable").collapse('show');
+							$("#tpr").collapse('show');
+							$(".collapseOne2").collapse('show');
+							
+						
+					console.log('-----guideList -OK= ');
+
+				} else {
+					msg(message);
+				}
+
+			
+
+
+			}, function error(data) {
+				msg("网络异常!");
+
+
+			}, false, false
+
+			);
+			
+			
+		
+		}
+		
+		$scope.addOrModify=function(item)
+		{
+			kvalidate.resetForm("#fm");
+			
+			if(item!=null)
+				{
+				
+				$scope.edit="编辑";
 				
 				$scope.s_recordid=item.recordid;
 				$scope.s_account=item.accountid;
@@ -187,6 +507,7 @@ $("#cpType2").select2({
 				}
 			else
 				{
+				$scope.edit="新增";
 				
 				$("#s_account").removeAttr('disabled');
 				
@@ -207,34 +528,80 @@ $("#cpType2").select2({
 		var http = getImUrl();// "";
 
 		
+		$scope.doupdateCompanyPro=function(){
+			var obj={};
+			obj.companyid=$scope.p_company_id;
+			obj.proxyserver_id=$scope.p_proxyserver_id;
+			obj.ipdesc=$scope.p_ip_desc;
+			obj.recordid=$scope.p_record_id;
 		
+			
+			SZUMWS(http + "companyproxyserver/addOrUpdate.action", JSON
+					.stringify(obj), function succsess(json) {
+
+				var code = json.ResponseCode;
+				var message = json.ResponseMsg;
+				console.log('-----return -code= ' + code + ';message= '
+						+ message);
+				if (code == 200) {
 		
-		$scope.update=function()
+					
+					
+					$("#myModal1").modal('hide');
+						
+					$scope.editproxysvr($scope.event,$scope.item);
+					
+					setTimeout(function(){
+						$scope.p_company_id="";
+						$scope.p_proxyserver_id="";
+						$scope.p_ip_desc="";
+						
+						$scope.$apply();
+					},200);
+					
+					
+				
+
+				} else {
+					msg(message);
+				}
+
+	
+
+			}, function error(data) {
+				msg("网络异常!");
+			
+			}, false, false
+
+			);
+		}
+		
+		$scope.updateCompanyPro=function()
 		{
 			
-			if($scope.fm.s_account.$error.required)
+			/*if($scope.fmp.p_proxyserver_id.$error.required)
 			{
-			error("用户ID必须要填写");
+			error("中转服务器必须要填写");
 			return;
 			}
-		if($scope.fm.s_pass.$error.required)
-		{
-			error("密码必须要填写");
-		return;
-		}
-		
-		if($scope.fm.s_ip_refresh.$error.required)
-		{
-			error("刷新时间必须要填写");
-		return;
-		}
-		
-		if($scope.fm.s_ip_refresh.$invalid)
-		{
-			error("刷新时间为数字");
-		return;
-		}
 			
+			if($scope.fmp.p_ip_desc.$error.required)
+			{
+			error("ID段必须要填写");
+			return;
+			}
+			if($scope.fmp.p_ip_desc.$invalid)
+			{
+			error("ID段格式错误");
+			return;
+			}*/
+			
+			kvalidate.validate("#fmp");
+			
+			
+		}
+		
+		$scope.doupdate=function(){
 			var obj={};
 			obj.recordid=$scope.s_recordid;
 			obj.accountid=$scope.s_account;
@@ -293,11 +660,42 @@ $("#cpType2").select2({
 
 			);
 			
+		}
+		
+		
+		$scope.update=function()
+		{
+			
+		/*	if($scope.fm.s_account.$error.required)
+			{
+			error("用户ID必须要填写");
+			return;
+			}
+		if($scope.fm.s_pass.$error.required)
+		{
+			error("密码必须要填写");
+		return;
+		}
+		
+		if($scope.fm.s_ip_refresh.$error.required)
+		{
+			error("刷新时间必须要填写");
+		return;
+		}
+		
+		if($scope.fm.s_ip_refresh.$invalid)
+		{
+			error("刷新时间为数字");
+		return;
+		}*/
+			
+		kvalidate.validate("#fm");
+		
 			
 		}
 		
 		
-		$scope.getcompayList = function(id, fucOnFinished, clear) {
+		$scope.getproxyserversList = function(id, fucOnFinished, clear) {
 
 			
 			var obj = new Object();
@@ -305,9 +703,10 @@ $("#cpType2").select2({
 			//obj.deviceid = $scope.id;// "12345678";
 			//obj.ip = $scope.ip;
 			//obj.compy_name = $scope.compy_name;
-			
+			obj.page =1;// 1;// "12345678";
+			obj.rows = 10;// 10;// "12345678";
 
-			SZUMWS(http + "phoneaccount/getInfoList.action", JSON
+			SZUMWS(http + "proxyserver/getInfoList.action", JSON
 					.stringify(obj), function succsess(json) {
 
 				var code = json.ResponseCode;
@@ -317,7 +716,7 @@ $("#cpType2").select2({
 				if (code == 200) {
 
 			
-					$scope.compays_select =eval(json.datalist);
+					$scope.proxyservers =eval(json.datalist);
 
 					//$scope.total = json.total;
 
@@ -344,17 +743,19 @@ $("#cpType2").select2({
 			);
 
 		}
-		$scope.getcompayList();
+		$scope.getproxyserversList();
 		
 		
 		
 		$scope.title="公司账号管理";
 		//$scope.curpage=1;
 		$scope.page=1;
-		$scope.rows=5;
+		$scope.rows=10;
 		
 		$scope.rows_select=[5,10,20];
-		
+		  setTimeout(function(){
+			   $("div.tablefoot select").val($scope.rows);
+		   }, 50);
 		$scope.pageData=[];
 		
 	
